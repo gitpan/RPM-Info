@@ -1,5 +1,5 @@
 package RPM::Info;
-$VERSION = '1.04';
+$VERSION = '1.05';
 
 =pod
 
@@ -53,7 +53,6 @@ RPM::Info
    		}
 	}
 
-
 	if ($rpm->getRpmRequirements(\@rpmreq, $seek) == 0)
 	{
    		print "\n\nREQUIREMENTS:";
@@ -62,6 +61,25 @@ RPM::Info
       			print "\n$_";
    		}
 	}
+	
+ 	if ($rpm->getRpmInfoRaw(\@rpms, "perl") == 0)
+        {
+                foreach (@rpms)
+                {
+                        print "\nRPM:-> $_";
+                }
+        }
+        
+	if ($rpm->getRpmDependents(\@rpms, "perl") == 0)
+        {
+                foreach (@rpms)
+                {
+                        print "\nRPM:-> $_";
+                }
+        }
+
+
+=cut
 
 =head1 DESCRIPTION
 
@@ -131,7 +149,7 @@ sub getRpms()
    }
    if ($#$ref < 0)
    {
-       return 1; 
+       return 1;
    }
 
    return 0;
@@ -323,6 +341,59 @@ sub getRpmRequirements()
    return 0;
 }
 
+=head2 getRpmInfoRaw((result(Array Reference), rpmname(scalar))
 
-   
+	gets Infos about the specified rpm and saves the output
+	line-by-line in an array 
+
+        returns 0 on succes - 1 on failure 
+
+=cut
+
+sub getRpmInfoRaw()
+{
+   my $self = shift;
+   my $ref = shift;
+   my $rpmseek = shift;
+   @$ref = `rpm -qi $rpmseek`;
+   foreach (@$ref)
+   {
+      chomp $_;
+   }
+
+   if ($#$ref < 0)
+   {
+      return 1;
+   }
+   return 0;
+}
+
+=head2 getRpmRequirements((result(Array Reference), rpmname(scalar))
+
+        gets all the rpm names that depend on the specified rpm 
+	and saves them into an array
+
+        returns 0 on succes - 1 on failure 
+
+=cut
+
+sub getRpmDependents()
+{
+   my $self = shift;
+   my $ref = shift;
+   my $rpmseek = shift;
+
+   @$ref = `rpm -q --whatrequires $rpmseek`;
+
+   foreach (@$ref)
+   {
+      chomp $_;
+   }
+   if ($#$ref < 0)
+   {
+      return 1;
+   } 
+   return 0;
+}
+
 1;
