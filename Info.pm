@@ -1,5 +1,5 @@
-package Info;
-$VERSION = '1.03';
+package RPM::Info;
+$VERSION = '1.04';
 
 =pod
 
@@ -9,70 +9,69 @@ RPM::Info
 
 =head1 SYNOPSIS
 
-#!/usr/bin/perl -w
+	#!/usr/bin/perl -w
 
-use RPM::Info;
+	use RPM::Info;
 
-my $rpm = new Info();
-my @rpms = ();
-my %filelist;
-my %info;
-my $dir = "";
-my $info = "";
-my @rpmreq = ();
-my $seek = "multi-gnome-terminal";
+	my $rpm = new RPM::Info();
+	my @rpms = ();
+	my %filelist;
+	my %info;
+	my $dir = "";
+	my $info = "";
+	my @rpmreq = ();
+	my $seek = "gimp-1.2.3-360";
 
-print "\nVer : ".$rpm->getRpmVer();
+	print "\nVer : ".$rpm->getRpmVer();
 
-if ($rpm->getRpms(\@rpms, "gnome") == 0)
-{
-   foreach (@rpms)
-   {
-      print "\nRPM:-> $_";
-   }
+	if ($rpm->getRpms(\@rpms, "gnome") == 0)
+	{
+   		foreach (@rpms)
+   		{
+      			print "\nRPM:-> $_";
+   		}
+	}
 
-}
+	if ($rpm->getRpmFiles(\%filelist, $seek) == 0)
+	{
+   		foreach $dir (keys(%filelist))
+   		{
+      			print "\n\n\nDir : $dir";
+      			foreach (@{$filelist{$dir}{'files'}})
+      			{
+          			print "\nFile : $_";
+      			}
+   		}
+	}
 
-
-
-if ($rpm->getRpmFiles(\%filelist, $seek) == 0)
-{
-   foreach $dir (keys(%filelist))
-   {
-      print "\n\n\nDir : $dir";
-      foreach (@{$filelist{$dir}{'files'}})
-      {
-          print "\nFile : $_";
-      }
-   }
-
-}
-
-if ($rpm->getRpmInfo(\%info, $seek) == 0)
-{
-   print "\n\nINFOS:";
-   foreach $info (keys(%info))
-   {
-      print "\n$info : $info{$info}";
-   }
-
-}
+	if ($rpm->getRpmInfo(\%info, $seek) == 0)
+	{
+   		print "\n\nINFOS:";
+   		foreach $info (keys(%info))
+   		{
+      			print "\n$info : $info{$info}";
+   		}
+	}
 
 
-if ($rpm->getRpmRequirements(\@rpmreq, $seek) == 0)
-{
-   print "\n\nREQUIREMENTS:";
-   foreach (@rpmreq)
-   {
-      print "\n$_";
-   }
-
-}
+	if ($rpm->getRpmRequirements(\@rpmreq, $seek) == 0)
+	{
+   		print "\n\nREQUIREMENTS:";
+   		foreach (@rpmreq)
+   		{
+      			print "\n$_";
+   		}
+	}
 
 =head1 DESCRIPTION
 
-The RPM::Info module allows to get informations about installed RPM's like name, version, 
-requirements, all files / directories containing to the RPM and so on,
+The RPM::Info module allows to get informations about installed RPM's:
+it fetches:
+	name,
+	version, 
+	requirements, 
+	all files / directories containing to a RPM,
+	information like vendor, distributor etc.
 
 =head1 AUTHOR
 
@@ -87,7 +86,7 @@ use strict;
 
 =head2 new
 
-creates a new object of the class
+	creates a new object of the class
 
 =cut
 
@@ -103,12 +102,12 @@ sub new
 
 =head2 getRpms(result(Array Reference), search pattern(scalar))
 
-searches for all installed rpm's containing the search pattern
-and saves them in an Array
+	searches for all installed rpm's containing the search pattern
+	and saves them in an Array
 
-if no search pattern is refered, all installed rpm's are saved
+	if no search pattern is refered, all installed rpm's are saved
 
-returns 0 on succes - 1 on failure 
+	returns 0 on succes - 1 on failure 
 
 =cut
 
@@ -140,10 +139,10 @@ sub getRpms()
 
 =head2 getRpmFiles((result(Hash Reference), rpmname(scalar))
 
-searches for all files and directories which belong to the refered rpm - name
-and saves them in a Hash of Hashes  
+	searches for all files and directories which belong to the refered rpm - name
+	and saves them in a Hash of Hashes  
 
-returns 0 on succes - 1 on failure 
+	returns 0 on succes - 1 on failure 
 
 =cut
 
@@ -197,7 +196,7 @@ sub getRpmFiles()
 
 =head2 getRpmVer()
 
-gets the version of rpm and returns it
+	gets the version of rpm and returns it
 
 =cut
 
@@ -211,10 +210,10 @@ sub getRpmVer()
 
 =head2 getRpmInfo((result(Hash Reference), rpmname(scalar))
 
-gets Infos about the specified rpm and saves them into 
-a Hash of Hashes
+	gets Infos about the specified rpm and saves them into 
+	a Hash of Hashes
 
-returns 0 on succes - 1 on failure 
+	returns 0 on succes - 1 on failure 
 
 =cut
 
@@ -298,9 +297,9 @@ sub getRpmInfo()
 
 =head2 getRpmRequirements((result(Array Reference), rpmname(scalar))
 
-gets all the requirements of the specified rpm and saves them into an array
+	gets all the requirements of the specified rpm and saves them into an array
 
-returns 0 on succes - 1 on failure 
+	returns 0 on succes - 1 on failure 
 
 =cut
 
