@@ -4,7 +4,7 @@ WriteMakefile(
 	'NAME'		=> 'RPM::Info',
 	'VERSION_FROM'	=> 'Info.pm',
 	'PREREQ_PM'     => {
-    		             'Test::More'=> 0,
+    		             'Test' => 0,
 			   },
 	'clean'		=> {
 		             'FILES'     => 'RPM-Info-*'
